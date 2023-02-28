@@ -6,11 +6,20 @@
 void setup()
 {
     Storage::initStorage(256);
-    WiFiHandler::init_networking("Lamp", "1234");
-    WiFiHandler::WebServer::init_server();
+    if (!Storage::has_credentials)
+    {
+        WiFiHandler::init_networking("Lamp", "1234");
+        WiFiHandler::setupDNS("lovelamp");
+        WiFiHandler::Webserver::init_server();
+    }
+    else
+    {
+        WiFiHandler::connectWithWiFi(Storage::readCredentials());
+        MQTT::initMQTT();
+    }
 }
 
 void loop()
 {
-    Rendering::render();
+    MQTT::check_status();
 }
