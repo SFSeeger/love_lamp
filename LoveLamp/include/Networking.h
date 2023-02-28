@@ -1,64 +1,22 @@
-#include <Storage.h>
+#ifndef NETWORKING_H
+#define NETWORKING_H
 
-#include <Wifi.h>
-#include <WebServer.h>
-#include <Dns.h>
-
-IPAddress init_networking(const char *ssid, const char *password)
+namespace WiFiHandler
 {
-    WiFi.softAP(ssid, password); // init wifi
-    return WiFi.softAPIP();
-}
 
-IPAddress connectWithWiFi(const char *ssid, Storage::t_Crendentials creds)
-{
-    WiFi.begin(ssid, creds.password);
-    while (WiFi.status() != WL_CONNECTED)
+    IPAddress init_networking(const char *ssid, const char *password);
+    IPAddress connectWithWiFi(t_Credentials creds);
+    namespace WebServer
     {
-        Serial.println(".");
-        delay(1000);
-    }
-    return WiFi.localIP();
-}
-
-namespace WebServer
-{
-    WebServer server(80);
-    static const char root[] PROGMEM = 
-    "<html>
-        <form action='/submit' method='POST'>
-            <label for='password'>Password:</label><br><input type='text' id='password' name='password'>
-            <input type='submit'>
-        </form>
-    </html>";
-
-    namespace Routes
-    {
-        void handleRoot()
+        namespace Routes
         {
-            server.send(200, "text/html", FPSTR(root));
+            void handleRoot();
+            void sendCredentials();
         }
+        void init_server();
 
-        void sendCredentials()
-        {
-            String password = server.arg("password");
-            // Save Credentials
-            Storage::storeCredentials({username, password});
-            // Set Global State
-            // GlobalState::State.isRunning = true;
-            server.send(200, "text/html", "You can close this page now");
-        }
-    }
-
-    void init_server()
-    {
-        server.begin();
-        server.on("/", Routes::handleRoot);
-        server.on("/submit", Routes::sendCredentials);
-    }
-
-    void run()
-    {
-        server.handleClient();
+        void run();
     }
 }
+
+#endif

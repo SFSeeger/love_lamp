@@ -6,8 +6,8 @@
 void setup()
 {
     Storage::initStorage(256);
-    init_networking("Lamp", "1234");
-    WebServer::init_server();
+    WiFiHandler::init_networking("Lamp", "1234");
+    WiFiHandler::WebServer::init_server();
 }
 
 void loop()

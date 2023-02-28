@@ -3,9 +3,9 @@
 
 namespace Updater
 {
-    int update(size_t size, Buffer *buf)
+    int update(size_t size, char *buf)
     {
-        if (!Update.begin(size, ledPin = LED_BUILTIN))
+        if (!Update.begin(size))
         {
             Update.printError(Serial);
             return -1;
