@@ -17,6 +17,8 @@ struct t_PixelData
 
 namespace Rendering
 {
+    t_PixelData json_to_pixeldata(DynamicJsonDocument doc);
+
     void update(t_PixelData data);
     void render_from_data(t_PixelData data);
     void render_solid(t_PixelData data);

@@ -1,5 +1,6 @@
 #ifndef NETWORKING_H
 #define NETWORKING_H
+#include <Storage.h>
 
 namespace WiFiHandler
 {
@@ -25,6 +26,9 @@ namespace MQTT
 {
     void initMQTT();
     void check_status();
+
+    void callback(char *topic, byte *message, unsigned int length);
+    void reconnect();
 
 } // namespace MQTT
 

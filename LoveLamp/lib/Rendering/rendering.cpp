@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include <Renderer.h>
+#include <ArduinoJson.h>
 
 #define NUM_PIXEL_SIDE 10
 #define NUM_PIXEL_COL 2
@@ -9,6 +10,23 @@ Adafruit_NeoPixel leds(NUM_PIXEL, PIN, NEO_RGBW + NEO_KHZ800);
 
 namespace Rendering
 {
+    t_PixelData json_to_pixeldata(DynamicJsonDocument doc)
+    {
+        t_PixelData pdata;
+        pdata.brightness = doc["brightness"];
+        JsonArray values = doc["values"].as<JsonArray>();
+
+        unsigned int i = 0;
+        for (JsonObject data : values)
+        {
+            t_Pixelinfo pinfo;
+            pinfo.pixel = data["pixel"].as<int>();
+            pinfo.color = data["color"].as<u_int32_t>();
+            pdata.pixelinfo[i++] = pinfo;
+        }
+        return pdata;
+    }
+
     void update(t_PixelData data)
     {
         leds.setBrightness(data.brightness);
@@ -51,6 +69,5 @@ namespace Rendering
 
     void render()
     {
-        
     }
 }
